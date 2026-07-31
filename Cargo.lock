@@ -464,7 +464,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "serde",
- "thiserror",
+ "thiserror 2.0.19",
  "tokio",
 ]
 
@@ -902,7 +902,7 @@ dependencies = [
  "rand_core",
  "serde",
  "serde_json",
- "thiserror",
+ "thiserror 2.0.19",
  "uuid",
 ]
 
@@ -1348,7 +1348,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
- "thiserror",
+ "thiserror 2.0.19",
  "uuid",
  "validator",
 ]
@@ -1855,7 +1855,7 @@ dependencies = [
  "sha2",
  "smallvec",
  "sqlformat",
- "thiserror",
+ "thiserror 1.0.69",
  "tokio",
  "tokio-stream",
  "tracing",
@@ -1941,7 +1941,7 @@ dependencies = [
  "smallvec",
  "sqlx-core",
  "stringprep",
- "thiserror",
+ "thiserror 1.0.69",
  "tracing",
  "uuid",
  "whoami",
@@ -1981,7 +1981,7 @@ dependencies = [
  "smallvec",
  "sqlx-core",
  "stringprep",
- "thiserror",
+ "thiserror 1.0.69",
  "tracing",
  "uuid",
  "whoami",
@@ -2024,7 +2024,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "serde",
- "thiserror",
+ "thiserror 2.0.19",
 ]
 
 [[package]]
@@ -2113,7 +2113,16 @@ version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
 dependencies = [
- "thiserror-impl",
+ "thiserror-impl 1.0.69",
+]
+
+[[package]]
+name = "thiserror"
+version = "2.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09a43598840e33d5b0331f38c5e30d13bb11c11210a4b58f0d9b18a5a5eefcd9"
+dependencies = [
+ "thiserror-impl 2.0.19",
 ]
 
 [[package]]
@@ -2125,6 +2134,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.119",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "2.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "43cbfe0cf76104d42a574802844187e84a305e531ed54455f11fbde0f10541cd"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 3.0.3",
 ]
 
 [[package]]
@@ -2328,7 +2348,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "serde",
- "thiserror",
+ "thiserror 2.0.19",
  "tokio",
 ]
 
@@ -2352,7 +2372,7 @@ dependencies = [
  "log",
  "rand",
  "sha1",
- "thiserror",
+ "thiserror 1.0.69",
  "url",
  "utf-8",
 ]
@@ -2371,7 +2391,7 @@ dependencies = [
  "chrono",
  "consent",
  "serde",
- "thiserror",
+ "thiserror 2.0.19",
  "uuid",
 ]
 
