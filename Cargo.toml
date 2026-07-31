@@ -32,7 +32,7 @@ rust-version = "1.85"
 anyhow = "1.0"
 async-trait = "0.1"
 axum = { version = "0.6.20", features = ["ws", "json"] }
-base64 = "0.21"
+base64 = "0.23"
 chrono = { version = "0.4.31", features = ["clock", "serde"] }
 ed25519-dalek = { version = "=2.1.1", features = ["rand_core"] }
 futures = "0.3"
