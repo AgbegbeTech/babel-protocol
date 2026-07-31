@@ -21,8 +21,8 @@ importers:
         specifier: ^2.2.3
         version: 2.3.0
       '@noble/hashes':
-        specifier: ^1.5.0
-        version: 1.8.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@tanstack/react-query':
         specifier: ^5.56.2
         version: 5.101.4(react@18.3.1)
@@ -481,6 +481,10 @@ packages:
   '@noble/hashes@1.8.0':
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@2.2.0':
+    resolution: {integrity: sha512-IYqDGiTXab6FniAgnSdZwgWbomxpy9FtYvLKs7wCUs2a8RkITG+DFGO1DM9cr+E3/RgADRpFjrKVaJ1z6sjtEg==}
+    engines: {node: '>= 20.19.0'}
 
   '@remix-run/router@1.23.3':
     resolution: {integrity: sha512-4An71tdz9X8+3sI4Qqqd2LWd9vS39J7sqd9EU4Scw7TJE/qB10Flv/UuqbPVgfQV9XoK8Np6jNquZitnZq5i+Q==}
@@ -1982,6 +1986,8 @@ snapshots:
   '@noble/ed25519@2.3.0': {}
 
   '@noble/hashes@1.8.0': {}
+
+  '@noble/hashes@2.2.0': {}
 
   '@remix-run/router@1.23.3': {}
 
