@@ -1,0 +1,24 @@
+name: Protocol change
+description: Propose a Babel Advancement Proposal
+title: "[BAP]: "
+labels: ["protocol", "bap"]
+body:
+  - type: input
+    id: bap
+    attributes:
+      label: BAP number
+      placeholder: BAP-0004
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+    validations:
+      required: true
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Privacy and consent impact
+    validations:
+      required: true

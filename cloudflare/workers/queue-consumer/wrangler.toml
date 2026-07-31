@@ -1,0 +1,11 @@
+name = "babel-queue-consumer"
+main = "src/index.ts"
+compatibility_date = "2026-07-31"
+
+[[queues.consumers]]
+queue = "babel-jobs"
+max_batch_size = 10
+max_batch_timeout = 5
+
+[vars]
+BABEL_NODE_ORIGIN = "https://api.babel.ing"

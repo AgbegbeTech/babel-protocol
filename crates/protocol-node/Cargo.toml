@@ -1,0 +1,33 @@
+[package]
+name = "protocol-node"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+axum.workspace = true
+chrono.workspace = true
+consent = { path = "../consent" }
+conversations = { path = "../conversations" }
+facilitation = { path = "../facilitation" }
+futures.workspace = true
+identity = { path = "../identity" }
+protocol-core = { path = "../protocol-core" }
+realtime = { path = "../realtime" }
+repair = { path = "../repair" }
+serde.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+tokio.workspace = true
+tower-http.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+translation = { path = "../translation" }
+understanding = { path = "../understanding" }
+uuid.workspace = true
+
+[dev-dependencies]
+tower.workspace = true

@@ -1,0 +1,13 @@
+name = "babel-realtime-room"
+main = "src/index.ts"
+compatibility_date = "2026-07-31"
+
+[durable_objects]
+bindings = [{ name = "ROOMS", class_name = "ConversationRoom" }]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["ConversationRoom"]
+
+[vars]
+BABEL_NODE_ORIGIN = "https://api.babel.ing"

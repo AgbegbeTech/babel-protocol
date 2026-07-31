@@ -1,0 +1,12 @@
+name = "babel-edge-gateway"
+main = "src/index.ts"
+compatibility_date = "2026-07-31"
+
+[vars]
+BABEL_NODE_ORIGIN = "https://api.babel.ing"
+ALLOWED_WEB_ORIGIN = "https://app.babel.ing"
+
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "ConversationRoom"
+script_name = "babel-realtime-room"

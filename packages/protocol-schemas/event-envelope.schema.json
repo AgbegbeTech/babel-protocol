@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.babel.ing/event-envelope.schema.json",
+  "title": "Babel Protocol Event",
+  "type": "object",
+  "required": [
+    "protocol",
+    "id",
+    "schema",
+    "version",
+    "author_id",
+    "device_id",
+    "created_at",
+    "client_sequence",
+    "parent_ids",
+    "scope",
+    "content",
+    "attachments",
+    "signature"
+  ],
+  "properties": {
+    "protocol": { "const": "babel/1" },
+    "id": { "type": "string", "minLength": 1 },
+    "schema": { "type": "string", "minLength": 1 },
+    "version": { "type": "integer", "minimum": 1 },
+    "author_id": { "type": "string", "pattern": "^did:babel:" },
+    "device_id": { "type": "string", "minLength": 1 },
+    "room_id": { "type": ["string", "null"], "format": "uuid" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "client_sequence": { "type": "integer", "minimum": 1 },
+    "parent_ids": { "type": "array", "items": { "type": "string" } },
+    "scope": {
+      "enum": ["private", "room", "community", "federated", "public"]
+    },
+    "expires_at": { "type": ["string", "null"], "format": "date-time" },
+    "content": { "type": "object" },
+    "attachments": { "type": "array" },
+    "signature": { "type": "string" }
+  },
+  "additionalProperties": false
+}

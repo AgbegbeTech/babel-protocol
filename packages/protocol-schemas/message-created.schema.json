@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.babel.ing/message-created.schema.json",
+  "title": "Babel Message Created Content",
+  "type": "object",
+  "required": ["original_text"],
+  "properties": {
+    "original_text": { "type": "string", "minLength": 1 },
+    "reply_to": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

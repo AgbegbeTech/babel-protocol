@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Babel</title>
+  <rect width="128" height="128" rx="28" fill="#050814"/>
+  <path d="M64 18 103 42v44L64 110 25 86V42Z" fill="none" stroke="#00f5ff" stroke-width="7"/>
+  <path d="M43 78 64 35l21 43M52 64h24" fill="none" stroke="#ff4ef5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

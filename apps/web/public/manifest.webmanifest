@@ -1,0 +1,16 @@
+{
+  "name": "Babel Protocol",
+  "short_name": "Babel",
+  "description": "Live multilingual conversation for shared understanding.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050814",
+  "theme_color": "#00f5ff",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

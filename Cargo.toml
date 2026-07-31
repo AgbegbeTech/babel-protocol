@@ -1,0 +1,52 @@
+[workspace]
+resolver = "2"
+members = [
+  "apps/node-console",
+  "crates/audit",
+  "crates/collaboration",
+  "crates/commons",
+  "crates/consent",
+  "crates/conversations",
+  "crates/facilitation",
+  "crates/identity",
+  "crates/jobs",
+  "crates/protocol-core",
+  "crates/protocol-node",
+  "crates/realtime",
+  "crates/repair",
+  "crates/storage",
+  "crates/translation",
+  "crates/understanding",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/open-source/babel-protocol"
+homepage = "https://babel.ing"
+description = "A live multilingual communication protocol for shared understanding, permission-based knowledge, and global collaboration."
+rust-version = "1.85"
+
+[workspace.dependencies]
+anyhow = "1.0"
+async-trait = "0.1"
+axum = { version = "0.6.20", features = ["ws", "json"] }
+base64 = "0.21"
+chrono = { version = "0.4.31", features = ["clock", "serde"] }
+ed25519-dalek = { version = "=2.1.1", features = ["rand_core"] }
+futures = "0.3"
+hex = "0.4"
+rand_core = { version = "0.6", features = ["getrandom"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["preserve_order"] }
+sha2 = "0.10"
+sqlx = { version = "=0.7.4", default-features = false, features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "json", "migrate", "macros"] }
+thiserror = "1.0"
+tokio = { version = "1.32", features = ["macros", "rt-multi-thread", "signal", "sync", "time"] }
+tower = "0.4"
+tower-http = { version = "0.4", features = ["cors", "trace", "request-id", "set-header"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+uuid = { version = "1.4", features = ["serde", "v4"] }
+validator = { version = "0.16", features = ["derive"] }

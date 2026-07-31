@@ -1,0 +1,13 @@
+[package]
+name = "commons"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+chrono.workspace = true
+consent = { path = "../consent" }
+serde.workspace = true
+uuid.workspace = true

@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest a feature for Babel Protocol
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true
+  - type: textarea
+    id: participants
+    attributes:
+      label: Participant agency impact
+    validations:
+      required: true

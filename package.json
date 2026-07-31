@@ -1,0 +1,18 @@
+{
+  "name": "babel-protocol-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Babel Protocol v0.1 workspace",
+  "license": "Apache-2.0",
+  "scripts": {
+    "frontend:typecheck": "pnpm --dir apps/web typecheck",
+    "frontend:lint": "pnpm --dir apps/web lint",
+    "frontend:test": "pnpm --dir apps/web test",
+    "frontend:build": "pnpm --dir apps/web build",
+    "worker:typecheck": "pnpm --dir cloudflare/workers/edge-gateway typecheck && pnpm --dir cloudflare/workers/realtime-room typecheck && pnpm --dir cloudflare/workers/queue-consumer typecheck",
+    "worker:test": "pnpm --dir cloudflare/workers/edge-gateway test && pnpm --dir cloudflare/workers/realtime-room test && pnpm --dir cloudflare/workers/queue-consumer test"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}

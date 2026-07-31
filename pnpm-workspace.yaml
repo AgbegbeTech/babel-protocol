@@ -1,0 +1,9 @@
+packages:
+  - "apps/web"
+  - "cloudflare/workers/*"
+  - "packages/*"
+
+onlyBuiltDependencies:
+  - esbuild
+allowBuilds:
+  esbuild: true

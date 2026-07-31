@@ -1,0 +1,10 @@
+{
+  "name": "@babel-protocol/protocol-schemas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./event-envelope": "./event-envelope.schema.json",
+    "./message-created": "./message-created.schema.json"
+  }
+}

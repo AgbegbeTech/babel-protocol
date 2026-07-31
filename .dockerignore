@@ -1,0 +1,8 @@
+target
+node_modules
+apps/web/dist
+coverage
+.git
+.env
+.dev.vars
+*.log

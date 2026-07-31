@@ -1,0 +1,17 @@
+[package]
+name = "realtime"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+chrono.workspace = true
+conversations = { path = "../conversations" }
+facilitation = { path = "../facilitation" }
+protocol-core = { path = "../protocol-core" }
+repair = { path = "../repair" }
+serde.workspace = true
+translation = { path = "../translation" }
+understanding = { path = "../understanding" }
