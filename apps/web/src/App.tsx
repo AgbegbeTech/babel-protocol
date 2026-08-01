@@ -1,27 +1,17 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import {
-  Activity,
   AlertTriangle,
-  AudioWaveform,
-  Bell,
   BookOpen,
-  BrainCircuit,
   CheckCircle2,
-  CircleDot,
+  ChevronRight,
   FileCheck2,
-  Globe2,
-  History,
   Languages,
   Mic,
-  PanelRight,
-  PenLine,
-  Radio,
   Send,
-  Settings,
   ShieldCheck,
   Sparkles,
-  UserRound,
+  UsersRound,
   Wrench,
   XCircle,
 } from "lucide-react";
@@ -36,20 +26,11 @@ import type {
   RoomSnapshot,
 } from "./types";
 
-const navItems = ["Conversations", "Understanding", "The Commons", "Projects", "Profile"];
-const toolbar = [
-  { label: "Voice", icon: Mic },
-  { label: "Transcribe", icon: Languages },
-  { label: "Whiteboard", icon: PenLine },
-  { label: "Insights", icon: Activity },
-  { label: "History", icon: History },
-  { label: "Settings", icon: Settings },
-];
+const navItems = ["Live Room", "Understanding", "The Commons", "Projects"];
 
 export default function App() {
   const room = useBabelRoom();
-  const [activeNav, setActiveNav] = useState("Conversations");
-  const [activeTool, setActiveTool] = useState("Insights");
+  const [activeNav, setActiveNav] = useState("Live Room");
 
   if (!room.snapshot) {
     return (
@@ -61,25 +42,27 @@ export default function App() {
   }
 
   return (
-    <main className="hud-shell">
-      <AmbientLayer />
-      <TopNav
+    <main className="babel-shell">
+      <TopBar
         activeNav={activeNav}
         setActiveNav={setActiveNav}
         connectionState={room.connectionState}
         activeIdentity={room.activeIdentity}
       />
 
-      <section className="hud-grid" aria-label="Babel live conversation workspace">
-        <LeftRail snapshot={room.snapshot} />
+      <section className="room-layout" aria-label="Babel live conversation workspace">
+        <ParticipantRail
+          snapshot={room.snapshot}
+          identities={room.identities}
+          activeParticipantId={room.activeParticipantId}
+          setActiveParticipantId={room.setActiveParticipantId}
+        />
 
-        <section className="conversation-stage" aria-label="Live conversation">
-          {activeNav === "Conversations" ? (
+        <section className="conversation-surface" aria-label="Live conversation">
+          {activeNav === "Live Room" ? (
             <ConversationRoom
               snapshot={room.snapshot}
-              identities={room.identities}
               activeParticipantId={room.activeParticipantId}
-              setActiveParticipantId={room.setActiveParticipantId}
               draft={room.draft}
               setDraft={room.setDraft}
               sendTyping={room.sendTyping}
@@ -101,7 +84,7 @@ export default function App() {
           )}
         </section>
 
-        <RightRail
+        <UnderstandingRail
           snapshot={room.snapshot}
           inviteFacilitator={room.inviteFacilitator}
           rejectFacilitator={room.rejectFacilitator}
@@ -111,29 +94,12 @@ export default function App() {
           publishArtifact={room.publishArtifact}
           createProject={room.createProject}
         />
-
-        <aside className="tool-strip" aria-label="Room tools">
-          {toolbar.map(({ label, icon: Icon }) => (
-            <button
-              className={activeTool === label ? "tool-button active" : "tool-button"}
-              key={label}
-              type="button"
-              onClick={() => setActiveTool(label)}
-              title={label}
-            >
-              <Icon size={23} aria-hidden="true" />
-              <span>{label}</span>
-            </button>
-          ))}
-        </aside>
       </section>
-
-      <WorldBand snapshot={room.snapshot} />
     </main>
   );
 }
 
-function TopNav({
+function TopBar({
   activeNav,
   setActiveNav,
   connectionState,
@@ -145,10 +111,10 @@ function TopNav({
   activeIdentity: DemoIdentity | null;
 }) {
   return (
-    <header className="top-nav">
-      <div className="logo-block" aria-label="Babel live conversation">
+    <header className="top-bar">
+      <div className="logo-block" aria-label="Babel">
         <strong>BABEL</strong>
-        <span>LIVE CONVERSATION</span>
+        <span>Live Room</span>
       </div>
       <nav aria-label="Primary">
         {navItems.map((item) => (
@@ -162,95 +128,76 @@ function TopNav({
           </button>
         ))}
       </nav>
-      <div className="top-status" aria-label="Network and profile status">
-        <Globe2 size={21} />
-        <AudioWaveform size={22} />
-        <Bell size={21} />
-        <span className="profile-chip">
-          <UserRound size={16} />
-          {activeIdentity?.display_name ?? "Amara"}
-        </span>
+      <div className="room-status-line">
         <span className={`connection-dot ${connectionState}`} />
+        <span>{connectionState === "open" ? "Connected" : "Reconnecting"}</span>
+        <b>{activeIdentity?.display_name ?? "Amara"}</b>
       </div>
     </header>
   );
 }
 
-function LeftRail({ snapshot }: { snapshot: RoomSnapshot }) {
-  const participantCount = snapshot.room.participants.length;
-  const messageCount = snapshot.messages.length;
-
+function ParticipantRail({
+  snapshot,
+  identities,
+  activeParticipantId,
+  setActiveParticipantId,
+}: {
+  snapshot: RoomSnapshot;
+  identities: DemoIdentity[];
+  activeParticipantId: string;
+  setActiveParticipantId: (id: string) => void;
+}) {
   return (
-    <aside className="left-rail">
-      <HudPanel title="Room Status" status="LIVE">
-        <div className="room-status">
-          <div className="pulse-orbit" aria-hidden="true">
-            <span />
-          </div>
-          <div>
-            <strong>Global Dialogue Room</strong>
-            <span>Room ID: GDR-77F3</span>
-            <small>{participantCount} participants</small>
-          </div>
-        </div>
-        <AvatarStack participants={snapshot.room.participants} />
-      </HudPanel>
-
-      <HudPanel title="Translation Confidence">
-        <div className="confidence">
-          <div className="confidence-ring">
-            <span>94%</span>
-          </div>
-          <div className="confidence-copy">
-            <span>Overall Confidence</span>
-            <strong>High</strong>
-            <WaveBars />
-          </div>
-        </div>
-        {[
-          ["Spanish -> English", "96%"],
-          ["English -> Spanish", "93%"],
-          ["Spanish -> French", "91%"],
-          ["French -> English", "90%"],
-        ].map(([pair, score]) => (
-          <div className="score-row" key={pair}>
-            <span>{pair}</span>
-            <strong>{score}</strong>
-          </div>
-        ))}
-      </HudPanel>
-
-      <HudPanel title="Active Languages">
-        <div className="language-chips">
-          {["Spanish", "English", "French", "Portuguese"].map((language) => (
-            <span key={language}>{language}</span>
+    <aside className="participant-rail">
+      <Panel title="People">
+        <div className="participant-list">
+          {snapshot.room.participants.map((participant) => (
+            <button
+              className={participant.id === activeParticipantId ? "participant-row active" : "participant-row"}
+              key={participant.id}
+              type="button"
+              onClick={() => setActiveParticipantId(participant.id)}
+            >
+              <Avatar participant={participant} />
+              <span>
+                <strong>{participant.display_name}</strong>
+                <small>{participant.preferred_language}</small>
+              </span>
+            </button>
           ))}
         </div>
-      </HudPanel>
+      </Panel>
 
-      <HudPanel title="Room Intelligence">
-        <div className="globe-widget">
-          <div className="wire-globe" aria-hidden="true" />
-          <div className="intelligence-readout">
-            <span>Conversation Flow</span>
-            <strong>Balanced</strong>
-            <span>Understanding</span>
-            <strong>Strengthening</strong>
-            <span>Cultural Sensitivity</span>
-            <strong>Optimal</strong>
-          </div>
+      <Panel title="Room">
+        <div className="quiet-room-card">
+          <UsersRound size={20} />
+          <strong>{snapshot.room.title}</strong>
+          <span>{snapshot.room.privacy.replace(/_/g, " ")}</span>
         </div>
-        <small>{messageCount} accepted messages in this private room</small>
-      </HudPanel>
+      </Panel>
+
+      <Panel title="Identity">
+        <div className="identity-switcher">
+          {identities.map((identity) => (
+            <button
+              key={identity.participant_id}
+              className={identity.participant_id === activeParticipantId ? "active" : ""}
+              type="button"
+              onClick={() => setActiveParticipantId(identity.participant_id)}
+            >
+              {identity.display_name}
+            </button>
+          ))}
+        </div>
+      </Panel>
     </aside>
   );
 }
 
 function ConversationRoom({
   snapshot,
-  identities,
   activeParticipantId,
-  setActiveParticipantId,
   draft,
   setDraft,
   sendTyping,
@@ -261,9 +208,7 @@ function ConversationRoom({
   openRepair,
 }: {
   snapshot: RoomSnapshot;
-  identities: DemoIdentity[];
   activeParticipantId: string;
-  setActiveParticipantId: (id: string) => void;
   draft: string;
   setDraft: (value: string) => void;
   sendTyping: (typing: boolean) => void;
@@ -273,47 +218,33 @@ function ConversationRoom({
   addCulturalContext: (messageId: string) => void;
   openRepair: (messageId: string) => void;
 }) {
-  const amara = snapshot.room.participants[0];
-  const diego = snapshot.room.participants[1];
   const typingParticipant = snapshot.room.participants.find(
     (participant) => participant.typing && participant.id !== activeParticipantId,
   );
 
   return (
     <>
-      <div className="participant-bridge">
-        <ParticipantHeader participant={amara} side="left" />
-        <div className="bridge-core" aria-hidden="true">
-          <WaveBars />
-          <div className="babel-emblem">A</div>
-          <WaveBars />
+      <div className="room-heading">
+        <div>
+          <span className="section-label">Live Room</span>
+          <h1>{snapshot.room.title}</h1>
         </div>
-        <ParticipantHeader participant={diego} side="right" />
-      </div>
-
-      <div className="demo-switcher">
-        <span>Development Demo Only</span>
-        {identities.map((identity) => (
-          <button
-            key={identity.participant_id}
-            className={identity.participant_id === activeParticipantId ? "active" : ""}
-            type="button"
-            onClick={() => setActiveParticipantId(identity.participant_id)}
-          >
-            {identity.display_name}
-          </button>
-        ))}
-        <button type="button" onClick={sendSeed}>
-          Send demo line
-        </button>
+        <div className="language-pair">
+          <Languages size={18} />
+          <span>English</span>
+          <ChevronRight size={15} />
+          <span>Spanish</span>
+        </div>
       </div>
 
       <div className="message-stream" aria-live="polite">
         {snapshot.messages.length === 0 ? (
           <div className="empty-stream">
-            <Languages size={38} />
-            <strong>Private live room ready</strong>
-            <span>Start with the demo line or write your own message.</span>
+            <Languages size={36} />
+            <strong>The room is quiet.</strong>
+            <button type="button" onClick={sendSeed}>
+              Send demo line
+            </button>
           </div>
         ) : (
           snapshot.messages.map((message) => (
@@ -332,9 +263,6 @@ function ConversationRoom({
           <div className="typing-indicator">
             <Avatar participant={typingParticipant} />
             <span>{typingParticipant.display_name} is typing...</span>
-            <i />
-            <i />
-            <i />
           </div>
         ) : null}
       </div>
@@ -356,33 +284,16 @@ function ConversationRoom({
             setDraft(event.target.value);
             sendTyping(true);
           }}
-          placeholder="Type your message..."
+          placeholder="Type a message..."
           aria-label="Message text"
         />
         <span className="language-toggle">EN</span>
         <span className="language-toggle">ES</span>
         <button type="submit" className="send-button" title="Send message">
-          <Send size={24} />
+          <Send size={21} />
         </button>
       </form>
-
-      <div className="translation-status">
-        <span />
-        REALTIME TRANSLATION ON
-      </div>
     </>
-  );
-}
-
-function ParticipantHeader({ participant, side }: { participant: Participant; side: "left" | "right" }) {
-  return (
-    <div className={`participant-header ${side}`}>
-      <Avatar participant={participant} large />
-      <div>
-        <strong>{participant.display_name}</strong>
-        <span>{participant.preferred_language}</span>
-      </div>
-    </div>
   );
 }
 
@@ -413,34 +324,31 @@ function MessageBubble({
           <time>{new Date(message.sent_at).toLocaleTimeString([], { timeStyle: "short" })}</time>
         </div>
         <div className="message-card">
-          <div className="original-line">
-            <span>Original</span>
-            <p>{message.original_text}</p>
-          </div>
-          <div className="translation-line">
-            <span>Translation</span>
-            <p>{translation?.translated_text ?? "Translation pending..."}</p>
+          <div className="paired-lines">
+            <div>
+              <span>Original</span>
+              <p>{message.original_text}</p>
+            </div>
+            <div>
+              <span>Translation</span>
+              <p>{translation?.translated_text ?? "Translation pending..."}</p>
+            </div>
           </div>
           <div className="message-state">
             <CheckCircle2 size={14} />
-            {message.delivery_state.replace(/_/g, " ")}
-            {confidence ? (
-              <b>
-                {translation?.source_language.toUpperCase()} {"->"}{" "}
-                {translation?.target_language.toUpperCase()} {confidence}%
-              </b>
-            ) : null}
+            <span>{message.delivery_state.replace(/_/g, " ")}</span>
+            {confidence ? <b>{confidence}%</b> : null}
           </div>
         </div>
         <div className="message-actions">
           <button type="button" onClick={() => challengeTranslation(message.id)}>
-            Translation may be incomplete
-          </button>
-          <button type="button" onClick={() => addCulturalContext(message.id)}>
-            Context
+            Challenge translation
           </button>
           <button type="button" onClick={() => openRepair(message.id)}>
-            I need clarification
+            Ask for clarification
+          </button>
+          <button type="button" onClick={() => addCulturalContext(message.id)}>
+            Add context
           </button>
         </div>
         {message.context_notes.map((note) => (
@@ -454,7 +362,7 @@ function MessageBubble({
   );
 }
 
-function RightRail({
+function UnderstandingRail({
   snapshot,
   inviteFacilitator,
   rejectFacilitator,
@@ -475,76 +383,59 @@ function RightRail({
 }) {
   const latestFacilitation = snapshot.facilitator_responses[snapshot.facilitator_responses.length - 1];
   const latestRepair = snapshot.repairs[snapshot.repairs.length - 1];
+  const latestTranslation = useMemo(() => {
+    const translations = snapshot.messages.flatMap((message) => message.translations);
+    return translations[translations.length - 1];
+  }, [snapshot.messages]);
+  const confidence = latestTranslation ? Math.round(latestTranslation.confidence * 100) : 94;
 
   return (
-    <aside className="right-rail">
-      <HudPanel title="Cultural Context" status="ACTIVE">
-        <div className="context-widget">
-          <BrainCircuit size={42} />
+    <aside className="understanding-rail">
+      <Panel title="Understanding Thread">
+        <div className="thread-item">
+          <Languages size={18} />
           <div>
-            <strong>Humility in Communication</strong>
-            <p>Humility may build trust and open dialogue when communities are protecting local knowledge.</p>
-            <span>Context Match 93%</span>
+            <strong>Translation</strong>
+            <span>{confidence}% confidence</span>
           </div>
         </div>
-      </HudPanel>
 
-      <HudPanel title="Fact-Check & Verification" status="ACTIVE">
-        <VerificationRow
-          state="Needs Context"
-          claim="Local collaboration begins with listening."
-          source="Participant statement"
-          confidence="84%"
-        />
-        <VerificationRow
-          state="Partially Supported"
-          claim="Listening is not always the same as understanding."
-          source="Dialogue context"
-          confidence="91%"
-        />
-      </HudPanel>
-
-      <HudPanel title="Misunderstanding Repair" status={latestRepair ? latestRepair.state : "STANDBY"}>
         {latestRepair ? (
-          <div className="repair-widget">
-            <AlertTriangle size={28} />
-            <strong>{latestRepair.note}</strong>
-            <span>{latestRepair.reason.replace(/_/g, " ")}</span>
-            <div className="repair-actions">
+          <div className="thread-card emphasis">
+            <AlertTriangle size={20} />
+            <span>Clarification Requested</span>
+            <p>{latestRepair.note}</p>
+            <div className="button-row">
               <button type="button" onClick={() => transitionRepair(latestRepair, "acknowledged")}>
                 Acknowledge
               </button>
               <button type="button" onClick={() => transitionRepair(latestRepair, "resolved")}>
                 Resolve
               </button>
-              <button type="button" onClick={() => transitionRepair(latestRepair, "unresolved")}>
-                Preserve
-              </button>
             </div>
           </div>
         ) : (
-          <div className="repair-quiet">
-            <CircleDot size={34} />
-            <span>No potential misunderstandings detected</span>
+          <div className="thread-card quiet">
+            <CheckCircle2 size={20} />
+            <span>No clarification open</span>
           </div>
         )}
-      </HudPanel>
 
-      <HudPanel title="AI Facilitation Suggestions" status="ACTIVE">
         {latestFacilitation ? (
           <FacilitationCard response={latestFacilitation} rejectFacilitator={rejectFacilitator} />
         ) : (
-          <div className="ai-widget">
-            <span>Suggested Action</span>
-            <p>Invite the facilitator to suggest one clarification question.</p>
+          <div className="thread-card">
+            <Sparkles size={19} />
+            <span>Facilitation</span>
+            <p>One clarification question can be invited, then accepted or rejected.</p>
             <button type="button" onClick={inviteFacilitator}>
-              Invite AI facilitator
+              Invite facilitator
             </button>
           </div>
         )}
-      </HudPanel>
+      </Panel>
 
-      <HudPanel title="Consent & Commons">
+      <Panel title="Consent">
         <ConsentWidget
           snapshot={snapshot}
           proposeArtifact={proposeArtifact}
@@ -552,7 +443,7 @@ function RightRail({
           publishArtifact={publishArtifact}
           createProject={createProject}
         />
-      </HudPanel>
+      </Panel>
     </aside>
   );
 }
@@ -576,10 +467,11 @@ function ConsentWidget({
   if (!artifact) {
     return (
       <div className="consent-widget">
-        <FileCheck2 size={26} />
-        <p>The conversation can remain private. Shared knowledge begins only by explicit proposal.</p>
+        <FileCheck2 size={22} />
+        <strong>Consent Not Yet Given</strong>
+        <p>Shared insight requires an exact proposal and participant approval.</p>
         <button type="button" onClick={proposeArtifact}>
-          Propose something from this conversation
+          Propose shared insight
         </button>
       </div>
     );
@@ -587,6 +479,7 @@ function ConsentWidget({
 
   return (
     <div className="consent-widget">
+      <FileCheck2 size={22} />
       <strong>{artifact.title}</strong>
       <p>{artifact.shared_summary}</p>
       <code>{artifact.revision_hash.slice(0, 18)}...</code>
@@ -597,7 +490,7 @@ function ConsentWidget({
           </span>
         ))}
       </div>
-      <div className="consent-actions">
+      <div className="button-row stack">
         <button type="button" onClick={approveArtifact}>
           Approve exact revision
         </button>
@@ -611,9 +504,30 @@ function ConsentWidget({
       {publication ? (
         <span className="privacy-proof">
           <ShieldCheck size={15} />
-          Commons export verified: no transcript exposed
+          Commons export verified
         </span>
       ) : null}
+    </div>
+  );
+}
+
+function FacilitationCard({
+  response,
+  rejectFacilitator,
+}: {
+  response: FacilitationResponse;
+  rejectFacilitator: (id: string) => void;
+}) {
+  return (
+    <div className="thread-card">
+      <Sparkles size={19} />
+      <span>Facilitation</span>
+      <p>{response.suggestion}</p>
+      <small>{response.disclosure}</small>
+      <button type="button" onClick={() => rejectFacilitator(response.id)}>
+        Reject suggestion
+      </button>
+      {response.accepted === false ? <b>Suggestion rejected</b> : null}
     </div>
   );
 }
@@ -636,7 +550,7 @@ function SectionView({
   const commonsClean = publicCommonsHasNoTranscript(snapshot.commons_publications);
   return (
     <div className="section-view">
-      <PanelRight size={34} />
+      <span className="section-label">{section}</span>
       <h1>{section}</h1>
       {section === "Understanding" ? (
         <ConsentWidget
@@ -675,110 +589,16 @@ function SectionView({
           ))}
         </div>
       ) : null}
-      {section === "Profile" ? (
-        <p className="profile-note">Demo identities are local development identities with separate device keys.</p>
-      ) : null}
     </div>
   );
 }
 
-function HudPanel({
-  title,
-  status,
-  children,
-}: {
-  title: string;
-  status?: string;
-  children: ReactNode;
-}) {
+function Panel({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="hud-panel">
-      <header>
-        <h2>{title}</h2>
-        {status ? <span>{status}</span> : null}
-      </header>
+    <section className="panel">
+      <h2>{title}</h2>
       {children}
     </section>
-  );
-}
-
-function VerificationRow({
-  state,
-  claim,
-  source,
-  confidence,
-}: {
-  state: string;
-  claim: string;
-  source: string;
-  confidence: string;
-}) {
-  return (
-    <div className="verification-row">
-      <ShieldCheck size={18} />
-      <div>
-        <strong>{state}</strong>
-        <p>{claim}</p>
-        <span>{source}</span>
-      </div>
-      <b>{confidence}</b>
-    </div>
-  );
-}
-
-function FacilitationCard({
-  response,
-  rejectFacilitator,
-}: {
-  response: FacilitationResponse;
-  rejectFacilitator: (id: string) => void;
-}) {
-  return (
-    <div className="ai-widget">
-      <span>Suggested Action</span>
-      <p>{response.suggestion}</p>
-      <small>{response.disclosure}</small>
-      <button type="button" onClick={() => rejectFacilitator(response.id)}>
-        Reject suggestion
-      </button>
-      {response.accepted === false ? <b>Suggestion rejected</b> : null}
-    </div>
-  );
-}
-
-function WorldBand({ snapshot }: { snapshot: RoomSnapshot }) {
-  return (
-    <footer className="world-band" aria-label="Global conversation metrics">
-      <div className="world-map" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
-      <div className="metric-card">
-        <span>Time Together</span>
-        <strong>01:24:17</strong>
-      </div>
-      <div className="metric-card">
-        <span>Words Exchanged</span>
-        <strong>{snapshot.messages.reduce((sum, message) => sum + message.original_text.split(/\s+/).length, 0)}</strong>
-      </div>
-      <div className="metric-card trend">
-        <span>Understanding Trend</span>
-        <strong>+32%</strong>
-      </div>
-    </footer>
-  );
-}
-
-function AvatarStack({ participants }: { participants: Participant[] }) {
-  return (
-    <div className="avatar-stack" aria-label="Participants">
-      {participants.map((participant) => (
-        <Avatar key={participant.id} participant={participant} />
-      ))}
-      <span>+8</span>
-    </div>
   );
 }
 
@@ -788,26 +608,6 @@ function Avatar({ participant, large = false }: { participant?: Participant; lar
       {participant?.display_name.slice(0, 1) ?? "B"}
       <i className={participant?.present ? "online" : ""} />
     </span>
-  );
-}
-
-function WaveBars() {
-  return (
-    <span className="wave-bars" aria-hidden="true">
-      {Array.from({ length: 18 }).map((_, index) => (
-        <i key={index} style={{ height: `${8 + ((index * 7) % 24)}px` }} />
-      ))}
-    </span>
-  );
-}
-
-function AmbientLayer() {
-  return (
-    <div className="ambient-layer" aria-hidden="true">
-      <span />
-      <span />
-      <span />
-    </div>
   );
 }
 
